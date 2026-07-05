@@ -1,23 +1,35 @@
 """
 Syllabus Analyzer Agent
+
 Responsibility:
-- Extract main topics, subtopics, and hierarchy structure from the syllabus text.
-- Standardize output into structured format.
+- Analyze syllabus text.
+- Extract important topics.
+- Return structured JSON.
 """
 
 from src.agents.base import BaseAgent
 
+
 class SyllabusAnalyzer(BaseAgent):
-    def analyze_syllabus(self, syllabus_text: str) -> dict:
+
+    def analyze_syllabus(self, syllabus_text: str) -> str:
         """
-        Parses syllabus text and extracts a structured JSON list of key topics.
-        
+        Analyze syllabus using Gemini.
+
         Args:
-            syllabus_text (str): Extracted raw syllabus text.
-            
+            syllabus_text (str): Extracted syllabus text.
+
         Returns:
-            dict: Structured topics and priorities list.
+            str: Gemini JSON response.
         """
-        # Load syllabus_analysis.txt prompt template
-        # Call Gemini client with JSON response schema if desired
-        return {}
+
+        prompt = self.load_prompt("src/prompts/syllabus_analysis.txt")
+
+        prompt = prompt.replace(
+            "{syllabus_text}",
+            syllabus_text
+        )
+
+        response = self.generate_response(prompt)
+
+        return response

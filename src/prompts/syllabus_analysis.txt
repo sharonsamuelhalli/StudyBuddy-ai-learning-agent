@@ -1,7 +1,20 @@
-You are an expert curriculum analyzer. Your task is to read the raw text of a syllabus and extract the core topics, subtopics, and hierarchy.
+You are an AI study assistant.
 
-Syllabus Text:
+Analyze the following syllabus.
+
+Return STRICT JSON in this format:
+
+{
+  "subject_name": "",
+  "topics": [],
+  "difficulty": Easy
+}
+
+Rules:
+- subject_name: name of the subject
+- topics: list every important syllabus topic
+- difficulty: assign Easy, Medium, or Hard to each topic
+
+Syllabus:
+
 {syllabus_text}
-
-Extract the list of topics in a clear hierarchical format, prioritizing core concepts that are likely to appear on the exam.
-If structured output is requested, provide the results as a JSON list where each item has "topic", "subtopics" (list), and "priority" ("High", "Medium", "Low").
