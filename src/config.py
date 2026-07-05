@@ -1,16 +1,34 @@
 """
-Configuration module for StudyBuddy AI Learning Agent
-Responsibility:
-- Load variables from .env
-- Centralize API Keys, model designations, and hyperparameters
+Configuration module for StudyBuddy AI Learning Agent.
+
+Responsibilities:
+- Load environment variables from .env
+- Store API keys
+- Store Gemini model configuration
+- Store application-wide constants
 """
 
 import os
 from dotenv import load_dotenv
 
-# Load local environment variables
+# Load environment variables
 load_dotenv()
 
-# Gemini Config
+# Gemini Configuration
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_MODEL = "gemini-2.5-flash"  # Highly efficient, fast model for textual analysis & MVP
+GEMINI_MODEL = "gemini-2.5-flash"
+
+# Model Settings
+TEMPERATURE = 0.3
+MAX_OUTPUT_TOKENS = 2048
+
+
+def validate_config():
+    """
+    Validate that the required configuration is available.
+    """
+
+    if not GEMINI_API_KEY:
+        raise ValueError(
+            "GEMINI_API_KEY not found. Please add it to your .env file."
+        )
