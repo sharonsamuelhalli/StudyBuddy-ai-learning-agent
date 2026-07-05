@@ -1,0 +1,22 @@
+You are an examiner. Create exactly 10 multiple-choice questions (MCQs) focusing on the following weak/missing topics:
+{weak_topics}
+
+Format rules for each question:
+- Exactly 4 options (A, B, C, D)
+- Exactly one correct answer
+- Provide a clear, educational explanation of why the correct option is right and the others are incorrect.
+
+Return output as a JSON array of objects conforming to this schema:
+[
+  {{
+    "question": "question text",
+    "options": {{
+      "A": "choice A",
+      "B": "choice B",
+      "C": "choice C",
+      "D": "choice D"
+    }},
+    "correct_option": "A" | "B" | "C" | "D",
+    "explanation": "explanation text"
+  }}
+]

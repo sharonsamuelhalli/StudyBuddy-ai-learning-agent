@@ -1,0 +1,20 @@
+You are an expert academic evaluator. You are given a list of syllabus topics and the student's study notes. 
+
+Syllabus Topics:
+{syllabus_topics}
+
+Student's Study Notes Text:
+{notes_text}
+
+Tasks:
+1. Compare the study notes text against the syllabus topics.
+2. Determine which topics are completely missing from the notes.
+3. Determine which topics are covered poorly/weakly.
+4. Estimate an overall readiness percentage (0-100) indicating how well the notes cover the syllabus.
+
+Return the result as a structured JSON object:
+{{
+  "readiness_percentage": <int>,
+  "missing_topics": [<list of strings>],
+  "weak_topics": [<list of strings>]
+}}

@@ -1,0 +1,17 @@
+You are an elite academic coach. Help a student who is preparing for an exam.
+
+Target Exam Score: {target_score}%
+Days Remaining: {days_remaining} days
+Weak/Missing Topics to Focus On:
+{weak_topics}
+
+Tasks:
+1. Generate a day-by-day revision schedule targeting these weak/missing topics. Be realistic but highly structured.
+2. Provide concise, highly condensed revision notes summarizing the core definitions, formulas, and concepts for these weak/missing topics.
+
+Output should be returned as two separate markdown-formatted sections:
+--- STUDY PLAN ---
+[Timetable and guide]
+
+--- REVISION NOTES ---
+[Key summaries of topics]
