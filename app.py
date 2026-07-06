@@ -8,6 +8,15 @@ Responsibility:
 
 import streamlit as st
 import time
+import PyPDF2
+from src.agents.study_planner import StudyPlanner
+
+def extract_text(file):
+    reader = PyPDF2.PdfReader(file)
+    text = ""
+    for page in reader.pages:
+        text += page.extract_text()
+    return text
 
 def run_agent_simulation():
     """Simulates agent execution pipeline to demonstrate timeline visuals."""
@@ -57,19 +66,38 @@ def main():
     
     with col_input:
         st.subheader("⚙️ Control Panel")
-        st.file_uploader("Upload Syllabus PDF", type=["pdf"], key="syllabus_upload")
-        st.file_uploader("Upload Study Notes PDF", type=["pdf"], key="notes_upload")
+        syllabus_file = st.file_uploader("Upload Syllabus PDF", type=["pdf"])
+        notes_file = st.file_uploader("Upload Study Notes PDF", type=["pdf"])
         
         st.number_input("Days Until Exam", min_value=1, value=7, step=1, key="days_input")
         st.slider("Target Exam Score (%)", min_value=0, max_value=100, value=85, key="score_input")
         
         analyze_btn = st.button("Start AI Analysis", type="primary", use_container_width=True)
-        
         if analyze_btn:
-            with st.spinner("Initializing Agent Collaboration..."):
-                run_agent_simulation()
+         with st.spinner("Running AI Analysis..."):
+            try:
+                syllabus_file = st.session_state.get("syllabus_upload")
+                notes_file = st.session_state.get("notes_upload")
+
+                syllabus_text = extract_text(syllabus_file) if syllabus_file else ""
+                notes_text = extract_text(notes_file) if notes_file else ""
+
+                planner = StudyPlanner()
+
+                result = planner.generate_plan_and_notes(
+                weak_topics=syllabus_text[:1000],
+                days_remaining=st.session_state["days_input"],
+                target_score=st.session_state["score_input"]
+            )
+
+                st.session_state["result"] = result
                 st.session_state["analysis_complete"] = True
                 st.success("Analysis Finished!")
+
+            except Exception as e:
+                st.error(f"❌ Error: {str(e)}")
+
+                
 
     with col_result:
         st.subheader("📊 Results Dashboard")
@@ -84,26 +112,20 @@ def main():
             
             # 2. Knowledge Gaps & Weak Areas
             st.markdown("### ⚠️ Identified Knowledge Gaps")
-            st.error("- **Dynamic Programming** (Status: *Missing* in Notes)")
-            st.warning("- **Graph Algorithms** (Status: *Weak* in Notes)")
+            #st.error("- **Dynamic Programming** (Status: *Missing* in Notes)")
+            #st.warning("- **Graph Algorithms** (Status: *Weak* in Notes)")
             
             # 3. Personalized Study Plan
-            st.markdown("### 📅 Personalized Study Plan")
-            st.markdown("""
-            | Day | Topics to Focus | Study Duration | Recommended Focus |
-            | :--- | :--- | :--- | :--- |
-            | **Day 1** | Dynamic Programming (Intro, Memoization) | 3 Hours | Read definitions, implement simple Fibonacci |
-            | **Day 2** | Dynamic Programming (Tabulation, Knapsack) | 3 Hours | Focus on bottom-up arrays & boundary conditions |
-            | **Day 3** | Graph Algorithms (BFS, DFS) | 2.5 Hours | Verify node traversal structures |
-            """)
+            result = st.session_state.get("result", "")
+            st.markdown(result)
             
             # 4. Revision Notes
             st.markdown("### 📝 Revision Notes (Targeted)")
-            st.markdown("""
+            '''st.markdown("""
             #### Topic: Dynamic Programming
             *   **Memoization (Top-Down)**: Storing results of expensive function calls and returning the cached result when the same inputs occur again.
             *   **Tabulation (Bottom-Up)**: Solving subproblems first, storing results in a table (usually an array), and building up to the solution.
-            """)
+            """)'''
             
             # 5. Practice Quiz
             st.markdown("### 📝 Targeted Practice Quiz (10 MCQs)")
